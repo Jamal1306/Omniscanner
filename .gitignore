@@ -1,0 +1,11 @@
+.env
+*.db
+scan_history.db
+__pycache__/
+*.pyc
+*.pyo
+venv/
+myenv/
+*.save
+.DS_Store
+*.log

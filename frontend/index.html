@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OmniScanner &mdash; Kali Edition</title>
+  <link rel="icon" type="image/svg+xml" href="logo.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M60 10 L98 26 L98 62 C98 82 80 98 60 106 C40 98 22 82 22 62 L22 26 Z" fill="#0a1628" stroke="#1e3a5f" stroke-width="2"/>
+            <path d="M60 22 L88 34 L88 62 C88 76 76 88 60 96 C44 88 32 76 32 62 L32 34 Z" fill="none" stroke="#1e2d42" stroke-width="1"/>
+            <line x1="32" y1="52" x2="88" y2="52" stroke="#4a9eff" stroke-width="2.5" opacity="0.9"/>
+            <line x1="32" y1="57" x2="88" y2="57" stroke="#4a9eff" stroke-width="0.8" opacity="0.3"/>
+            <line x1="32" y1="47" x2="88" y2="47" stroke="#4a9eff" stroke-width="0.8" opacity="0.3"/>
+            <circle cx="50" cy="52" r="4" fill="#f87171"/>
+            <circle cx="70" cy="52" r="3" fill="#4ade80"/>
+            <circle cx="60" cy="52" r="3" fill="#4a9eff"/>
+            <circle cx="60" cy="76" r="6" fill="none" stroke="#4a9eff" stroke-width="1.5"/>
+            <circle cx="60" cy="76" r="2.5" fill="#4a9eff"/>
+          </svg>
+        </div>
+        <div>
+          <div class="logo-name">OmniScanner</div>
+          <div class="logo-sub">Kali Linux &mdash; OWASP Top 10 2025</div>
+        </div>
+      </div>
+      <nav class="nav-pills">
+        <button class="pill active" onclick="showTab('scan')" id="pill-scan">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Scanner
+        </button>
+        <button class="pill" onclick="showTab('history')" id="pill-history">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 0 .5-4.5"/></svg>
+          History
+        </button>
+        <button class="pill" onclick="showTab('dashboard')" id="pill-dashboard">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </button>
+      </nav>
+    </header>
+
+    <!-- SCAN TAB -->
+    <div id="tab-scan" class="tab-content">
+      <div class="hero-card">
+        <div class="hero-inner">
+          <div class="field-label">Target URL</div>
+          <div class="scan-row">
+            <input id="url" type="text" placeholder="https://target.com" autocomplete="off" spellcheck="false"/>
+            <button id="scan-btn" onclick="startScan()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              Scan target
+            </button>
+          </div>
+        </div>
+        <div id="scan-live" class="scan-live hidden">
+          <div class="progress-wrap">
+            <div class="prog-track"><div class="prog-fill" id="fill"></div></div>
+            <div id="step-label" class="prog-label">Initializing...</div>
+          </div>
+          <div class="step-list" id="step-list"></div>
+        </div>
+      </div>
+
+      <div id="kpi-grid" class="kpi-grid hidden"></div>
+      <div id="findings-area" class="hidden"></div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div id="tab-history" class="tab-content hidden">
+      <div class="section-header">
+        <span class="section-title">Scan history</span>
+        <button class="ghost-btn" onclick="loadHistory()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Refresh
+        </button>
+      </div>
+      <div id="history-list"><p class="muted-msg">Loading...</p></div>
+    </div>
+
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard" class="tab-content hidden">
+      <div class="section-header">
+        <span class="section-title">Dashboard</span>
+        <button class="ghost-btn" onclick="loadDashboard()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Refresh
+        </button>
+      </div>
+      <div id="dash-kpis" class="kpi-grid" style="margin-bottom:16px;"></div>
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="chart-label">Severity breakdown</div>
+          <canvas id="chart-donut" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-label">Top scanned hosts</div>
+          <canvas id="chart-hosts" height="200"></canvas>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-top:12px;">
+        <div class="chart-label">OWASP Top 10 2025 &mdash; findings distribution</div>
+        <canvas id="chart-owasp" height="140"></canvas>
+      </div>
+    </div>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

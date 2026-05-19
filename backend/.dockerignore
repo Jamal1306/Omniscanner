@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+scan_history.db
+*.db
+*.save
+.git/
+*.log
+myenv/
